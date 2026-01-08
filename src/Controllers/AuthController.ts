@@ -28,7 +28,11 @@ class AuthController {
                     cid:createUser.id,
                     email :createUser.email
                 }
-                const token =  jwt.sign(JwtPayload,process.env.SECRETKEY,{expiresIn:"365d"});
+                 const secret = process.env.SECRETKEY;
+                if (!secret) {
+                    throw new Error("SECRETKEY not defined");
+                }
+                const token =  jwt.sign(JwtPayload,secret,{expiresIn:"365d"});
                 return response.json({
                     message:"Logged in successfully",
                     token:`Bearer ${token}`
@@ -42,3 +46,5 @@ class AuthController {
 
 
 }
+
+export default AuthController
