@@ -1,18 +1,54 @@
 import { Request,Response } from "express";
-import Prisma from "../config/db.config";
+import {prisma} from "../config/db.config.js"
 
 class ChatGroupController {
+static async index(req: Request, res: Response) {
+    try {
+      const user = req.user;
+      const groups = await prisma.chatGroup.findMany({
+        where: {
+          user_id: Number(user.id),
+        },
+        orderBy: {
+          created_at: "desc",
+        },
+      });
+      return res.json({ data: groups });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Something went wrong.please try again!" });
+    }
+  }
+     static async show(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      if (id) {
+        const group = await prisma.chatGroup.findUnique({
+          where: {
+            id: id,
+          },
+        });
+        return res.json({ data: group });
+      }
+
+      return res.status(404).json({ message: "No groups found" });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Something went wrong.please try again!" });
+    }
+  }
     static async store (req:Request,res:Response){
 
         try {
             const data = req.body;
             const user = req.user;
-    
-            await Prisma.ChatGroup.create({
+            await prisma.chatGroup.create({
                 data:{
-                    user_id:user?.id,
+                    user_id:Number(user?.id),
                     passcode : data.passcode,
-                    title:data.title
+                    title:data?.title
                 }
             })
     
@@ -27,7 +63,7 @@ class ChatGroupController {
             const data = req.body;
             const {id} = req.params;
     
-            await Prisma.ChatGroup.update({
+            await prisma.chatGroup.update({
                 data:{
                     passcode : data.passcode,
                     title:data.title
@@ -47,7 +83,7 @@ class ChatGroupController {
         try {
             const {id} = req.params;
     
-           const groups = await Prisma.ChatGroup.delete({
+           const groups = await prisma.chatGroup.delete({
                 where:{
                     id:id
                 }

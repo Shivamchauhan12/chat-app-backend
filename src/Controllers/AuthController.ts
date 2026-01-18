@@ -1,32 +1,33 @@
-import Prisma from "../config/db.config";
+import {prisma} from "../config/db.config.js"
 import {Request,Response} from "express"
 import jwt from "jsonwebtoken"
 
 interface LoginPayloadType{
     name : string;
     email : string;
-    provide : string;
-    image ?: string;
+    provider : string;
+    image : string;
     oauth_id : string;
 }
 
 
 class AuthController {
     static async login(request:Request,response:Response){
-
         try {
             const data : LoginPayloadType = request.body;
-            const findUser = await Prisma.user.findUniuq({
+            let findUser = await prisma.user.findUnique({
+                where:{
                 email:data.email
+                }
             })
-    
             if(!findUser){
-                const createUser =  await Prisma.user.create({
-                    data:data
-                })
+                findUser =  await prisma.user.create({
+                    data:data,
+                });
+            }
                 const JwtPayload = {
-                    cid:createUser.id,
-                    email :createUser.email
+                    id:findUser.id,
+                    email :findUser.email
                 }
                  const secret = process.env.SECRETKEY;
                 if (!secret) {
@@ -38,13 +39,13 @@ class AuthController {
                     token:`Bearer ${token}`
                 })
             }
-        } catch (error) {
+         catch (error) {
             response.status(500).json({message:"something went wrong"})
         }
+    } 
+
     }
 
 
-
-}
 
 export default AuthController

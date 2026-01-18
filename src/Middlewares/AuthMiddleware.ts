@@ -10,7 +10,7 @@ const AuthMiddleware = async (req:Request,res:Response,next:NextFunction)=>{
         return res.status(401).json({status:401,message:"token not found"})
     }
 
-    const actualToken  = token.split(" ")[1]
+    const actualToken  = token?.split(" ")[1]
     const secret = process.env.SECRETKEY;
     if (!secret) {
         throw new Error("SECRETKEY not defined");

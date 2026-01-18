@@ -1,5 +1,6 @@
 interface AuthUser {
     id : string
+    cid ?: string
     name :string
     email : string
 }
