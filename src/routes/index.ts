@@ -23,4 +23,7 @@ router.post("/chat-group-user", ChatGroupUserController.store);
 // * Chats
 router.get("/chats/:groupId", ChatsController.index);
 
+//*visitor log
+router.get("/visitor-log", AuthController.visitorLog);
+
 export default router;

@@ -55,3 +55,13 @@ model Chats {
   @@index([created_at])
   @@map("chats")
 }
+
+model Visitor {
+  id          String   @id @default(uuid())
+  ipAddress   String
+  userAgent   String
+  createdAt   DateTime @default(now())
+
+  @@index([ipAddress])
+  @@map("visitors")
+}

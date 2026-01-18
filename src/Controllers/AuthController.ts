@@ -15,13 +15,11 @@ class AuthController {
     static async login(request:Request,response:Response){
         try {
             const data : LoginPayloadType = request.body;
-            console.log(data,"data")
             let findUser = await prisma.user.findUnique({
                 where:{
                 email:data.email
                 }
             })
-            console.log(findUser,"findeUser");
             if(!findUser){
                 findUser =  await prisma.user.create({
                     data:data,
@@ -47,8 +45,32 @@ class AuthController {
         }
     } 
 
+    static async visitorLog(request:Request,response:Response){
+       try {
+        console.log("Visitor log endpoint hit");
+            const ip =
+            (request.headers["x-forwarded-for"] as string)?.split(",")[0] ||
+            request.socket.remoteAddress ||
+            "unknown";
+            console.log("Visitor IP:", ip);
+
+            const userAgent = request.headers["user-agent"] || "unknown";
+            console.log("Visitor Info:", { ip, userAgent });
+            await prisma.visitor.create({
+            data: {
+                ipAddress: ip,
+                userAgent: userAgent
+                },
+            });
+
+            response.status(200).json({ success: true });
+        } catch (error) {
+            console.error("Visitor tracking failed:", error);
+            response.status(500).json({ success: false });
+        }
+
     }
 
-
+}
 
 export default AuthController
