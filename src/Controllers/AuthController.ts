@@ -42,6 +42,7 @@ class AuthController {
                 })
             }
          catch (error) {
+             console.log(error,"login error")
             response.status(500).json({message:"something went wrong"})
         }
     } 
