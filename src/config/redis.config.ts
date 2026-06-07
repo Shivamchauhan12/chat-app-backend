@@ -1,7 +1,7 @@
 import Redis from "ioredis";
 
 const redisClient = new Redis(
-  "ediss://default:AZY7AAIncDE4ZjgwYjI3MWVjM2Q0YWM1OTA2YTkwN2ViM2E2MWZmY3AxMzg0NTk@pumped-mantis-38459.upstash.io:6379",
+  "rediss://default:gQAAAAAAAjPFAAIgcDFjYmVhNDBjMzBmZDM0YTk5OTUwY2RjMmQzOGNjM2NkNw@giving-krill-144325.upstash.io:6379",
   {
     tls: {},
     maxRetriesPerRequest: null,
